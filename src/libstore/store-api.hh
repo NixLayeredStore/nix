@@ -422,7 +422,7 @@ public:
 
     /**
      * Query the mapping outputName => outputPath for the given
-     * derivation. All outputs are mentioned so ones mising the mapping
+     * derivation. All outputs are mentioned so ones missing the mapping
      * are mapped to `std::nullopt`.
      */
     virtual std::map<std::string, std::optional<StorePath>> queryPartialDerivationOutputMap(const StorePath & path);
