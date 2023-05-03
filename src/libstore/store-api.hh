@@ -25,6 +25,7 @@
 #include <string>
 #include <chrono>
 #include <variant>
+#include <iostream>
 
 
 namespace nix {
@@ -979,13 +980,17 @@ struct Implementations
     template<typename T, typename TConfig>
     static void add()
     {
+        std::cerr << "Implementations::add: T = " << typeid(T).name() << std::endl;
         if (!registered) registered = new std::vector<StoreFactory>();
         StoreFactory factory{
             .uriSchemes = T::uriSchemes(),
             .create =
                 ([](const std::string & scheme, const std::string & uri, const Store::Params & params)
                  -> std::shared_ptr<Store>
-                 { return std::make_shared<T>(scheme, uri, params); }),
+                 {
+                    std::cerr << "create<T = " << typeid(T).name() << ">" << std::endl;
+                    return std::make_shared<T>(scheme, uri, params);
+                 }),
             .getConfig =
                 ([]()
                  -> std::shared_ptr<StoreConfig>

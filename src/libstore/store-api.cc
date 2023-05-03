@@ -14,6 +14,7 @@
 
 #include <nlohmann/json.hpp>
 #include <regex>
+#include <iostream>
 
 using json = nlohmann::json;
 
@@ -1459,6 +1460,14 @@ ref<Store> openStore(const std::string & uri_,
     const Store::Params & extraParams)
 {
     auto params = extraParams;
+    std::cerr << "\x1b[1;33mopenStore\x1b[0m" << std::endl;
+    std::cerr << "    uri = '" << uri_ << "'" << std::endl;
+    std::cerr << "    params = {" << std::endl;
+    for (const auto& [k, v] : params) {
+        std::cerr << k << ": '" << v << "'" << std::endl;
+    }
+    std::cerr << "    }" << std::endl;
+
     try {
         auto parsedUri = parseURL(uri_);
         params.insert(parsedUri.query.begin(), parsedUri.query.end());
@@ -1469,7 +1478,13 @@ ref<Store> openStore(const std::string & uri_,
         );
 
         for (auto implem : *Implementations::registered) {
+            std::cerr << "implem.uriSchemes:";
+            for (auto scheme : implem.uriSchemes) {
+                std::cerr << " " << scheme;
+            }
+            std::cerr << std::endl;
             if (implem.uriSchemes.count(parsedUri.scheme)) {
+                std::cerr << "   try this one" << std::endl;
                 auto store = implem.create(parsedUri.scheme, baseURI, params);
                 if (store) {
                     store->init();

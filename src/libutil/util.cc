@@ -660,6 +660,7 @@ Paths createDirs(const Path & path)
     struct stat st;
     if (lstat(path.c_str(), &st) == -1) {
         created = createDirs(dirOf(path));
+        std::cerr << "\x1b[34mmkdir " << path << "\x1b[0m" << std::endl;
         if (mkdir(path.c_str(), 0777) == -1 && errno != EEXIST)
             throw SysError("creating directory '%1%'", path);
         st = lstat(path);

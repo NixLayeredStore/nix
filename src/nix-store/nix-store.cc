@@ -1029,6 +1029,8 @@ static void opVersion(Strings opFlags, Strings opArgs)
    list. */
 static int main_nix_store(int argc, char * * argv)
 {
+    std::cerr << "main_nix_store" << std::endl;
+
     {
         Strings opFlags, opArgs;
         Operation op = 0;
@@ -1036,6 +1038,7 @@ static int main_nix_store(int argc, char * * argv)
         std::string opName;
         bool showHelp = false;
 
+        std::cerr << "main_nix_store: debug1" << std::endl;
         parseCmdLine(argc, argv, [&](Strings::iterator & arg, const Strings::iterator & end) {
             Operation oldOp = op;
 
@@ -1159,6 +1162,7 @@ static int main_nix_store(int argc, char * * argv)
 
             return true;
         });
+        std::cerr << "main_nix_store: debug2" << std::endl;
 
         if (showHelp) showManPage("nix-store" + opName);
         if (!op) throw UsageError("no operation specified");

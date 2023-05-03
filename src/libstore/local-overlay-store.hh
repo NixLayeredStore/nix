@@ -9,6 +9,7 @@
 #include "gc-store.hh"
 #include "sync.hh"
 #include "util.hh"
+//#include "ref.hh"
 
 #include <chrono>
 #include <future>
@@ -23,9 +24,16 @@ struct LocalOverlayStoreConfig : virtual LocalStoreConfig
 {
     using LocalStoreConfig::LocalStoreConfig;
 
-    const PathSetting lowerRootDir{(StoreConfig*) this, false, "",
+    const Setting<std::string> lowerUri{(StoreConfig*) this,
+        "",
         "lower",
-        "Root directory of the underlying Nix store."};
+        "Uri of the underlying Nix store."};
+
+    const PathSetting workDir{(StoreConfig*) this,
+        false,
+        rootDir + "/nix/.store",
+        "work",
+        "Directory to use as overlayfs workdir."};
 
     const std::string name() override { return "Local Overlay Store"; }
 
@@ -37,12 +45,17 @@ class LocalOverlayStore : public virtual LocalOverlayStoreConfig,
     public virtual LocalStore,
     public virtual GcStore
 {
+    std::shared_ptr<LocalFSStore> lowerStore;
+
 public:
 
-    LocalOverlayStore(const Params & params);
+    LocalOverlayStore(const Params & params, std::string lowerUri = "auto");
     LocalOverlayStore(std::string scheme, std::string path, const Params & params);
 
     ~LocalOverlayStore();
+
+    static std::set<std::string> uriSchemes()
+    { return {"overlay"}; }
 
     std::string getUri() override;
 
