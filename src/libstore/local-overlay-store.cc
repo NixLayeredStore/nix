@@ -2,6 +2,7 @@
 #include "callback.hh"
 #include "url.hh"
 #include <regex>
+#include <iostream>
 
 namespace nix {
 
@@ -115,6 +116,7 @@ void LocalOverlayStore::queryRealisationUncached(const DrvOutput & drvOutput,
 
 bool LocalOverlayStore::isValidPathUncached(const StorePath & path)
 {
+    std::cerr << "\x1b[1;37mLocalOverlayStore::isValidPathUncached\x1b[0m" << std::endl;
     auto res = LocalStore::isValidPathUncached(path);
     if (res) return res;
     res = lowerStore->isValidPath(path);

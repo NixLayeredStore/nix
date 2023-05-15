@@ -932,6 +932,7 @@ bool LocalStore::isValidPath_(State & state, const StorePath & path)
 
 bool LocalStore::isValidPathUncached(const StorePath & path)
 {
+    std::cerr << "\x1b[33misValidPathUncached(\x1b[37m" << path.to_string() << "\x1b[33m)\x1b[0m - " << realStoreDir.get() << std::endl;
     return retrySQLite<bool>([&]() {
         auto state(_state.lock());
         return isValidPath_(*state, path);

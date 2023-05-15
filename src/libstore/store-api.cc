@@ -15,6 +15,7 @@
 
 #include <nlohmann/json.hpp>
 #include <regex>
+#include <iostream>
 
 using json = nlohmann::json;
 
@@ -23,6 +24,8 @@ namespace nix {
 
 bool Store::isInStore(PathView path) const
 {
+    std::cerr << "isInStore(" << path << ")" << std::endl;
+    std::cerr << "  storeDir = " << storeDir << std::endl;
     return isInDir(path, storeDir);
 }
 
@@ -1461,6 +1464,8 @@ static std::string extractConnStr(const std::string &proto, const std::string &c
 ref<Store> openStore(const std::string & uri_,
     const Store::Params & extraParams)
 {
+    std::cerr << "openStore: \x1b[1;36m" << uri_ << "\x1b[0m" << std::endl;
+
     auto params = extraParams;
     try {
         auto parsedUri = parseURL(uri_);

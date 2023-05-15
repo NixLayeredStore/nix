@@ -133,3 +133,8 @@ nix-rust/target
 result
 
 .vscode/
+
+.*.sw?
+.sw?
+tags
+result-bin
