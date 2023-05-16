@@ -53,7 +53,7 @@ static void traceSQL(void * x, const char * sql)
 
 SQLite::SQLite(const Path & path, SQLiteOpenMode mode)
 {
-    bool readOnly = mode == SQLiteOpenMode::ReadOnly;
+    bool readOnly = mode == SQLiteOpenMode::Immutable;
 
     // useSQLiteWAL also indicates what virtual file system we need.  Using
     // `unix-dotfile` is needed on NFS file systems and on Windows' Subsystem
