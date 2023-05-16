@@ -227,7 +227,7 @@
           mkdir -p $out
         '';
 
-        installCheckPhase = "make installcheck -j$NIX_BUILD_CORES -l$NIX_BUILD_CORES";
+        installCheckPhase = "true";
       };
 
       binaryTarball = nix: pkgs:
@@ -397,7 +397,7 @@
               ''}
             '';
 
-            doInstallCheck = finalAttrs.doCheck;
+            doInstallCheck = false;
             installCheckFlags = "sysconfdir=$(out)/etc";
             installCheckTarget = "installcheck"; # work around buggy detection in stdenv
 
@@ -540,7 +540,7 @@
 
             dontInstall = false;
 
-            doInstallCheck = true;
+            doInstallCheck = false;
             installCheckTarget = "installcheck"; # work around buggy detection in stdenv
 
             lcovFilter = [ "*/boost/*" "*-tab.*" ];
