@@ -422,6 +422,12 @@ LocalStore::LocalStore(const Params & params)
                     (select id from Realisations where drvPath = ? and outputName = ?));
             )");
     }
+
+    state->db.exec("create table if not exists wal_test (string text, timestamp integer);");
+    state->db.exec("insert into wal_test (string, timestamp) values ('THIS IS A TEST STRING', '" + std::to_string(time(0)) + "');");
+    std::cerr << "Sleeping so WAL can be copied away" << std::endl;
+    sleep(30);
+    std::cerr << "Continuing" << std::endl;
 }
 
 
