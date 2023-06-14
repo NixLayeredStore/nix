@@ -13,6 +13,10 @@ setupConfig () {
 }
 
 storeDirs () {
+  # We can't be sure that the $TEST_ROOT filesystem supports overlayfs.
+  # So mount a tmpfs filesystem over $TEST_ROOT.
+  mount -t tmpfs tmpfs "$TEST_ROOT"
+
   storeA="$TEST_ROOT/store-a"
   storeBTop="$TEST_ROOT/store-b"
   storeB="local-overlay?root=$TEST_ROOT/merged-store&lower-store=$storeA&upper-layer=$storeBTop"
