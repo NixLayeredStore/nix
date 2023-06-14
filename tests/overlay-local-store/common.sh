@@ -42,14 +42,16 @@ toRealPath () {
   echo $storeDir$(echo $storePath | sed "s^$NIX_STORE_DIR^^")
 }
 
-initLowerStore () {
+initLowerStore () {(
+  export NIX_STORE_DIR=$storeA/nix/store
+
   # Init lower store with some stuff
   nix-store --store "$storeA" --add ../dummy
 
   # Build something in lower store
   drvPath=$(nix-instantiate --store $storeA ../hermetic.nix --arg busybox "$busybox" --arg seed 1)
   path=$(nix-store --store "$storeA" --realise $drvPath)
-}
+)}
 
 execUnshare () {
   exec unshare --mount --map-root-user "$SHELL" "$@"
