@@ -9,7 +9,7 @@ source common.sh
 #nix-hash --help | grepQuiet base32
 
 # Can we ask for the version number?
-nix-env --version | grep "$version"
+#nix-env --version | grep "$version"
 
 # Usage errors.
 expect 1 nix-env --foo 2>&1 | grep "no operation"

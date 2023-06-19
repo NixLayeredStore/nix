@@ -5,8 +5,9 @@
   inputs.nixpkgs-regression.url = "github:NixOS/nixpkgs/215d4d0fd80ca5163643b03a33fde804a29cc1e2";
   inputs.lowdown-src = { url = "github:kristapsdz/lowdown"; flake = false; };
   inputs.flake-compat = { url = "github:edolstra/flake-compat"; flake = false; };
+  inputs.nixToTest.url = "git+file:///home/ben/git/nix?ref=overlayfs-store";
 
-  outputs = { self, nixpkgs, nixpkgs-regression, lowdown-src, flake-compat }:
+  outputs = { self, nixpkgs, nixpkgs-regression, lowdown-src, flake-compat, nixToTest }:
 
     let
       inherit (nixpkgs) lib;
@@ -626,6 +627,9 @@
         installTests = forAllSystems (system:
           let pkgs = nixpkgsFor.${system}.native; in
           pkgs.runCommand "install-tests" {
+              withoutBuild =
+                let nix = nixToTest.packages.${system}.default;
+                in testNixVersions pkgs nix nix;
             againstSelf = testNixVersions pkgs pkgs.nix pkgs.pkgs.nix;
             againstCurrentUnstable =
               # FIXME: temporarily disable this on macOS because of #3605.
