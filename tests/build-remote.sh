@@ -1,7 +1,7 @@
 requireSandboxSupport
 [[ $busybox =~ busybox ]] || skipTest "no busybox"
 
-unset NIX_STORE_DIR
+#unset NIX_STORE_DIR
 unset NIX_STATE_DIR
 
 function join_by { local d=$1; shift; echo -n "$1"; shift; printf "%s" "${@/#/$d}"; }
@@ -10,6 +10,9 @@ EXTRA_SYSTEM_FEATURES=()
 if [[ -n "${CONTENT_ADDRESSED-}" ]]; then
     EXTRA_SYSTEM_FEATURES=("ca-derivations")
 fi
+
+#NIX_REMOTE=$TEST_ROOT/machine0 nix show-config
+#nix show-config --store $TEST_ROOT/machine0
 
 builders=(
   # system-features will automatically be added to the outer URL, but not inner

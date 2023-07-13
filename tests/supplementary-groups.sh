@@ -1,8 +1,9 @@
 source common.sh
 
-requireSandboxSupport
+#requireSandboxSupport
 [[ $busybox =~ busybox ]] || skipTest "no busybox"
-if ! command -p -v unshare; then skipTest "Need unshare"; fi
+echo $PATH
+if ! command -v unshare; then skipTest "Need unshare"; fi
 needLocalStore "The test uses --store always so we would just be bypassing the daemon"
 
 unshare --mount --map-root-user bash <<EOF
@@ -10,9 +11,18 @@ unshare --mount --map-root-user bash <<EOF
 
   setLocalStore () {
     export NIX_REMOTE=\$TEST_ROOT/\$1
+    #export NIX_STORE_DIR=\$NIX_REMOTE/nix/store
     mkdir -p \$NIX_REMOTE
   }
 
+  echo \$PATH
+  echo $busybox
+  setLocalStore store1
+
+  nix-instantiate ./hermetic.nix --arg busybox "$busybox" --arg seed 1
+  find \$NIX_REMOTE
+  sleep infinity
+  exit 127
   cmd=(nix-build ./hermetic.nix --arg busybox "$busybox" --arg seed 1 --no-out-link)
 
   # Fails with default setting

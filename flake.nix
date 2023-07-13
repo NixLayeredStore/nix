@@ -5,7 +5,7 @@
   inputs.nixpkgs-regression.url = "github:NixOS/nixpkgs/215d4d0fd80ca5163643b03a33fde804a29cc1e2";
   inputs.lowdown-src = { url = "github:kristapsdz/lowdown"; flake = false; };
   inputs.flake-compat = { url = "github:edolstra/flake-compat"; flake = false; };
-  inputs.nixToTest.url = "git+file:///home/ben/git/nix?ref=best-effort-supplementary-groups";
+  inputs.nixToTest.url = "git+file:///home/cidkid/Projects/nix/quick-nix-build?ref=layered/best-effort-supplementary-groups";
 
   outputs = { self, nixpkgs, nixpkgs-regression, lowdown-src, flake-compat, nixToTest }:
 
@@ -101,6 +101,7 @@
 
         testConfigureFlags = [
           "RAPIDCHECK_HEADERS=${lib.getDev rapidcheck}/extras/gtest/include"
+          "--with-sandbox-shell=${sh}/bin/busybox"
         ];
 
         internalApiDocsConfigureFlags = [
@@ -200,7 +201,7 @@
           '';
 
       testNixVersions = pkgs: client: daemon: with commonDeps { inherit pkgs; }; with pkgs.lib; pkgs.stdenv.mkDerivation {
-        NIX_DAEMON_PACKAGE = daemon;
+        #NIX_DAEMON_PACKAGE = daemon;
         NIX_CLIENT_PACKAGE = client;
         name =
           "nix-tests"
@@ -214,7 +215,7 @@
 
         VERSION_SUFFIX = versionSuffix;
 
-        nativeBuildInputs = nativeBuildDeps;
+        nativeBuildInputs = nativeBuildDeps ++ [ daemon pkgs.zsh pkgs.gdb pkgs.strace pkgs.coreutils pkgs.less ];
         buildInputs = buildDeps ++ awsDeps ++ checkDeps;
         propagatedBuildInputs = propagatedDeps;
 
@@ -228,7 +229,7 @@
           mkdir -p $out
         '';
 
-        installCheckPhase = "make installcheck -j$NIX_BUILD_CORES -l$NIX_BUILD_CORES";
+        installCheckPhase = "make tests/build-remote-input-addressed.sh.test-debug -j$NIX_BUILD_CORES -l$NIX_BUILD_CORES";
       };
 
       binaryTarball = nix: pkgs:

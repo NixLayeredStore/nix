@@ -156,9 +156,8 @@ test-deps += \
   tests/common/vars-and-functions.sh \
   tests/config.nix \
   tests/ca/config.nix \
-  tests/test-libstoreconsumer/test-libstoreconsumer \
   tests/dyn-drv/config.nix
 
-ifeq ($(BUILD_SHARED_LIBS), 1)
-  test-deps += tests/plugins/libplugintest.$(SO_EXT)
-endif
+#ifeq ($(BUILD_SHARED_LIBS), 1)
+#  test-deps += tests/plugins/libplugintest.$(SO_EXT)
+#endif
