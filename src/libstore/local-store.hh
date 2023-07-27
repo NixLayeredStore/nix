@@ -266,6 +266,14 @@ public:
     bool verifyStore(bool checkContents, RepairFlag repair) override;
 
     /**
+     * Used by verifyStore to list contents of store directory.
+     * The default implementation just calls readDirectory on realStoreDir,
+     * but derived stores may wish to change this behaviour. For example,
+     * LocalOverlayStore lists the contents of the upper layer instead.
+     */
+    virtual void readStoreDirectoryForVerify(StringSet & names);
+
+    /**
      * Register the validity of a path, i.e., that `path` exists, that
      * the paths referenced by it exists, and in the case of an output
      * path of a derivation, that it has been produced by a successful

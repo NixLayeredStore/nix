@@ -1506,7 +1506,7 @@ bool LocalStore::verifyStore(bool checkContents, RepairFlag repair)
     FdLock gcLock(fdGCLock.get(), ltRead, true, "waiting for the big garbage collector lock...");
 
     StringSet store;
-    for (auto & i : readDirectory(realStoreDir)) store.insert(i.name);
+    readStoreDirectoryForVerify(store);
 
     /* Check whether all valid paths actually exist. */
     printInfo("checking path existence...");
@@ -1598,6 +1598,12 @@ bool LocalStore::verifyStore(bool checkContents, RepairFlag repair)
     }
 
     return errors;
+}
+
+
+void LocalStore::readStoreDirectoryForVerify(StringSet & names)
+{
+    for (auto & i : readDirectory(realStoreDir)) names.insert(i.name);
 }
 
 

@@ -243,6 +243,21 @@ void LocalOverlayStore::optimiseStore()
 }
 
 
+void LocalOverlayStore::readStoreDirectoryForVerify(StringSet & names)
+{
+    // LocalOverlayStore needs to support use cases where the lower store
+    // contains a vast number of store paths. In such a case, simply enumerating
+    // the contents of the directory will take far too long. Instead we query
+    // which paths are valid in the overlay store, and then build the names set
+    // by checking those paths actually exist.
+    for (auto & i : queryAllValidPaths()) {
+        auto name = std::string{i.to_string()};
+        if (pathExists(realStoreDir.get() + "/" + name))
+            names.insert(name);
+    }
+}
+
+
 Path LocalOverlayStore::toRealPathForHardLink(const StorePath & path)
 {
     return lowerStore->isValidPath(path)
