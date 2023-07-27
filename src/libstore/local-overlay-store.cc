@@ -250,7 +250,7 @@ void LocalOverlayStore::readStoreDirectoryForVerify(StringSet & names)
     // the contents of the directory will take far too long. Instead we query
     // which paths are valid in the overlay store, and then build the names set
     // by checking those paths actually exist.
-    for (auto & i : queryAllValidPaths()) {
+    for (auto & i : LocalStore::queryAllValidPaths()) {
         auto name = std::string{i.to_string()};
         if (pathExists(realStoreDir.get() + "/" + name))
             names.insert(name);
