@@ -12,6 +12,7 @@
 #include "callback.hh"
 #include "remote-store.hh"
 #include "local-overlay-store.hh"
+#include "local-cache-store.hh"
 
 #include <nlohmann/json.hpp>
 #include <regex>
@@ -1447,6 +1448,8 @@ std::shared_ptr<Store> openFromNonUri(const std::string & uri, const Store::Para
         auto store = std::make_shared<LocalOverlayStore>(params);
         experimentalFeatureSettings.require(store->experimentalFeature());
         return store;
+    } else if (uri == "local-cache") {
+        return std::make_shared<LocalCacheStore>(params);
     } else if (isNonUriPath(uri)) {
         Store::Params params2 = params;
         params2["root"] = absPath(uri);
